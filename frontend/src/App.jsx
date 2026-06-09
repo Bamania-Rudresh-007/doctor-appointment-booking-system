@@ -9,13 +9,35 @@ const App = () => {
   const { isBooked } = useAppointment();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100">
+          <div
+        className="min-h-screen relative"
+        style={{
+          background: "#f3f4f6",
+          backgroundImage:
+            "radial-gradient(at 0% 0%, rgba(219,234,254,0.6) 0, transparent 50%), radial-gradient(at 100% 0%, rgba(243,232,255,0.7) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(224,242,254,0.6) 0, transparent 50%), radial-gradient(at 0% 100%, rgba(253,226,226,0.5) 0, transparent 50%), linear-gradient(135deg, rgba(239,246,255,0.4) 0%, rgba(245,243,255,0.4) 100%)",
+        }}
+      >
       {/* Dynamic Background Elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-100/40 rounded-full blur-[120px]" />
-        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] bg-purple-100/30 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-1/4 w-[60%] h-[40%] bg-blue-50/50 rounded-full blur-[120px]" />
-      </div>
+        <div
+          className="fixed pointer-events-none"
+          style={{
+            top: "20%", left: "-10%",
+            width: "40vw", height: "40vw",
+            background: "linear-gradient(45deg, rgba(59,130,246,0.12), rgba(147,51,234,0.08))",
+            borderRadius: "43% 57% 41% 59% / 57% 45% 55% 43%",
+            filter: "blur(40px)", zIndex: 0,
+          }}
+        />
+        <div
+          className="fixed pointer-events-none"
+          style={{
+            bottom: "-5%", right: "-5%",
+            width: "35vw", height: "35vw",
+            background: "linear-gradient(135deg, rgba(6,182,212,0.1), rgba(59,130,246,0.08))",
+            borderRadius: "50% 50% 30% 70% / 50% 60% 40% 50%",
+            filter: "blur(50px)", zIndex: 0,
+          }}
+        />
 
       <Header />
 
