@@ -59,7 +59,7 @@ const ReceiptCard = () => {
                   </p>
                   <p className="text-sm">
                     <strong className="text-gray-600">Payable Amount:</strong> 
-                    <span className="ml-2 font-bold text-gray-900">₹{fee}</span>
+                    <span className="ml-2 font-bold text-gray-900">${fee}.00</span>
                   </p>
                 </div>
                 <p className="text-[11px] text-gray-500 italic mt-4 leading-relaxed">
