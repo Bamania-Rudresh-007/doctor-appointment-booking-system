@@ -21,7 +21,7 @@ const FormCard = () => {
         {/* Category Selection */}
         <div className="space-y-2">
           <label className="text-sm font-semibold text-gray-700">Appointment Category</label>
-          <div className="flex gap-4">
+          <div className="flex gap-4 mt-1.5">
             <button
               type="button"
               onClick={() => updateAppointment('category', 'regular')}
