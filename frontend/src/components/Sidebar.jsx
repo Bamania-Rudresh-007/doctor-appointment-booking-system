@@ -20,46 +20,32 @@ const Sidebar = () => {
       </GlassCard>
 
       {/* Clinic Hours */}
-      <GlassCard dark>
-        <h3 className="text-2xl font-bold mb-10 tracking-tight">Clinic Hours</h3>
-        <div className="space-y-8">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-blue-400" />
-            </div>
-            <div>
-              <p className="text-[15px] font-bold">Monday - Friday</p>
-              <p className="text-xs text-gray-400 font-medium">8:00 AM - 6:00 PM</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-blue-400" />
-            </div>
-            <div>
-              <p className="text-[15px] font-bold">Saturday</p>
-              <p className="text-xs text-gray-400 font-medium">9:00 AM - 2:00 PM</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-red-500" />
-            </div>
-            <div>
-              <p className="text-[15px] font-bold">Sunday: Closed</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-8 pt-6 border-t border-slate-800">
-          <div className="flex gap-3">
-            <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
-            <p className="text-xs text-red-400 leading-relaxed">
-              Emergency bookings are answered <span className="font-bold">24/7 on call priority status.</span>
-            </p>
-          </div>
-        </div>
-      </GlassCard>
+    <div
+        className="rounded-3xl p-6 sm:p-8 lg:p-10"
+        style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)" }}
+         >
+        <h2
+          className="text-white font-bold text-base sm:text-lg mb-5 sm:mb-6 pb-3"
+          style={{ borderBottom: "2px solid rgba(255,255,255,0.08)" }}
+        >
+          Clinic Hours
+        </h2>
+        <p className="flex items-center gap-2 text-slate-300 text-xs sm:text-sm mb-3">
+          <span>🗓️</span> Monday – Friday: 8:00 AM – 6:00 PM
+        </p>
+        <p className="flex items-center gap-2 text-slate-300 text-xs sm:text-sm mb-3">
+          <span>🗓️</span> Saturday: 9:00 AM – 2:00 PM
+        </p>
+        <p className="flex items-center gap-2 text-slate-300 text-xs sm:text-sm mb-4">
+          <span>🔴</span> Sunday: Closed
+        </p>
+        <p
+          className="text-red-300 text-xs font-bold pt-3"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}
+        >
+          🚨 Emergency bookings answered 24/7 on call priority status.
+        </p>
+      </div>
     </div>
   );
 };
