@@ -158,10 +158,6 @@ const App = () => {
                         <Route path="/earnings" element={<DoctorPanel />}>
                             <Route index element={<EarningsPage />} />
                         </Route>
-                        <Route
-                            path="/earnigns"
-                            element={<Navigate to="/earnings" replace />}
-                        />
                     </Route>
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
