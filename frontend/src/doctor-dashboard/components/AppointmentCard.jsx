@@ -52,7 +52,7 @@ const AppointmentCard = ({ appointment, onStatusChange, onFeePaidChange }) => {
                         <StatusBadge status={appointment.status} />
                         <button
                             onClick={() => setIsExpanded(!isExpanded)}
-                            className="p-2 bg-slate-700/50 hover:bg-slate-700 rounded-lg transition-colors text-gray-300 hover:text-white"
+                            className="p-2 bg-slate-700/50 hover:bg-slate-700 rounded-lg transition-colors text-gray-300 hover:text-white cursor-pointer"
                         >
                             <ChevronDown
                                 size={20}
@@ -121,46 +121,31 @@ const AppointmentCard = ({ appointment, onStatusChange, onFeePaidChange }) => {
                     </div>
 
                     {/* Status Update */}
-                    <div className="relative">
+                    <div className="mt-2">
                         <p className="text-sm font-semibold text-gray-300 mb-2">
                             Update Status
                         </p>
-                        <div className="relative">
-                            <button
-                                onClick={() =>
-                                    setShowStatusMenu(!showStatusMenu)
-                                }
-                                className="w-full px-4 py-2 bg-blue-600/20 border border-blue-500/30 rounded-lg text-blue-400 hover:bg-blue-600/30 transition-colors flex items-center justify-between"
-                            >
-                                <span>Change Status</span>
-                                <ChevronDown
-                                    size={18}
-                                    className={`transition-transform ${showStatusMenu ? "rotate-180" : ""}`}
-                                />
-                            </button>
-
-                            {showStatusMenu && (
-                                <div className="absolute top-full mt-2 w-full bg-slate-900 border border-slate-700 rounded-lg overflow-hidden z-10 shadow-lg">
-                                    {["Pending", "Completed", "Cancelled"].map(
-                                        (status) => (
-                                            <button
-                                                key={status}
-                                                onClick={() =>
-                                                    handleStatusChange(status)
-                                                }
-                                                className={`w-full px-4 py-3 text-left hover:bg-slate-800 transition-colors ${
-                                                    appointment.status ===
-                                                    status
-                                                        ? "bg-blue-600/20 text-blue-400"
-                                                        : "text-gray-300"
-                                                }`}
-                                            >
-                                                {status}
-                                            </button>
-                                        ),
-                                    )}
-                                </div>
-                            )}
+                        <div className="flex gap-2 flex-wrap">
+                            {["Pending", "Completed", "Cancelled"].map((status) => {
+                                const isActive = appointment.status === status;
+                                const colorMap = {
+                                    Pending:   isActive ? "bg-yellow-600/30 text-yellow-400 border-yellow-500/40" : "text-gray-400 border-slate-600 hover:bg-yellow-600/10 hover:text-yellow-400 hover:border-yellow-500/30",
+                                    Completed: isActive ? "bg-green-600/30 text-green-400 border-green-500/40"   : "text-gray-400 border-slate-600 hover:bg-green-600/10 hover:text-green-400 hover:border-green-500/30",
+                                    Cancelled: isActive ? "bg-red-600/30 text-red-400 border-red-500/40"         : "text-gray-400 border-slate-600 hover:bg-red-600/10 hover:text-red-400 hover:border-red-500/30",
+                                };
+                                return (
+                                    <button
+                                        key={status}
+                                        onClick={() => handleStatusChange(status)}
+                                        className={`flex-1 min-w-[90px] px-3 py-2 rounded-lg text-sm font-semibold border transition-all ${colorMap[status]}`}
+                                    >
+                                        {status === "Pending" && "🕐 "}
+                                        {status === "Completed" && "✓ "}
+                                        {status === "Cancelled" && "✕ "}
+                                        {status}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
