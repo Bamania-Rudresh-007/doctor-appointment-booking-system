@@ -35,7 +35,7 @@ const DoctorSidebar = ({ currentPage, onNavigate, onLogout }) => {
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 rounded-lg text-white"
+                className= {`md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 rounded-lg text-white ${isOpen ? 'bg-red-600' : 'bg-blue-600'}`}
             >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -48,7 +48,7 @@ const DoctorSidebar = ({ currentPage, onNavigate, onLogout }) => {
                         : "-translate-x-full md:translate-x-0"
                 }`}
             >
-                <div className="flex flex-col h-full">
+                <div className={`flex flex-col h-full ${isOpen ? 'mt-12' : ''}`}>
                     {/* Logo Section */}
                     <div className="p-6 border-b border-slate-700">
                         <div className="flex items-center gap-3">
@@ -103,7 +103,7 @@ const DoctorSidebar = ({ currentPage, onNavigate, onLogout }) => {
                     </nav>
 
                     {/* Logout Button */}
-                    <div className="p-3 border-t border-slate-700">
+                    <div className={`p-3 border-t border-slate-700 ${isOpen ? 'mb-12' : ''}`}>
                         <button
                             onClick={handleLogout}
                             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-red-600/20 text-red-400 hover:bg-red-600/30 transition-all cursor-pointer"
