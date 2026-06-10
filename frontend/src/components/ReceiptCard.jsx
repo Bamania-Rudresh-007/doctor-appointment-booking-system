@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Calendar, Clock, User, Phone, DollarSign, ArrowLeft } from 'lucide-react';
+import { CheckCircle, Calendar, Clock, User, Phone, IndianRupee, ArrowLeft } from 'lucide-react';
 import { useAppointment } from '../context/AppointmentContext';
 import { formatTime, FEES } from '../utils/helpers';
 import GlassCard from './GlassCard';
@@ -39,7 +39,7 @@ const ReceiptCard = () => {
           <ReceiptRow 
             label="Total Consultation Fee" 
             value={`₹${fee}`} 
-            icon={DollarSign}
+            icon={IndianRupee}
           />
         </div>
 
