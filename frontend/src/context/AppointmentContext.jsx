@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AppointmentContext = createContext();
 
@@ -22,6 +22,10 @@ export const AppointmentProvider = ({ children }) => {
   const updateAppointment = (field, value) => {
     setAppointment((prev) => ({ ...prev, [field]: value }));
   };
+
+  useEffect(() => {
+    console.log(bookingHistory);
+  }, [bookingHistory])
 
   const bookAppointment = () => {
     const newBooking = {
