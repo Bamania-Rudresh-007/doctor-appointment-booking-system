@@ -1,65 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import {
+    BrowserRouter,
+    Navigate,
+    Outlet,
+    Route,
+    Routes,
+    useLocation,
+    useNavigate,
+} from "react-router-dom";
 import Header from "./components/Header";
 import FormCard from "./components/FormCard";
 import Sidebar from "./components/Sidebar";
 import ReceiptCard from "./components/ReceiptCard";
 import { useAppointment } from "./context/AppointmentContext";
-import { DoctorProvider } from "./doctor-dashboard/context/DoctorContext";
+import {
+    DoctorProvider,
+    useDoctorContext,
+} from "./doctor-dashboard/context/DoctorContext";
 import DoctorLogin from "./doctor-dashboard/pages/DoctorLogin";
 import DoctorPanel from "./doctor-dashboard/pages/DoctorPanel";
-import { isDoctorAuthenticated } from "./doctor-dashboard/utils/localStorage";
+import DoctorDashboard from "./doctor-dashboard/pages/DoctorDashboard";
+import AppointmentsHistory from "./doctor-dashboard/pages/AppointmentsHistory";
+import EarningsPage from "./doctor-dashboard/pages/EarningsPage";
 
-const App = () => {
+const ClientHomePage = () => {
     const { isBooked } = useAppointment();
-    const [view, setView] = useState("patient"); // 'patient' or 'doctor'
-    const [isDoctorLoggedIn, setIsDoctorLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        // Check if doctor is already logged in
-        if (isDoctorAuthenticated()) {
-            setIsDoctorLoggedIn(true);
-            setView("doctor");
-        }
-    }, []);
-
-    const handleDoctorLoginSuccess = () => {
-        setIsDoctorLoggedIn(true);
-        setView("doctor");
-    };
-
-    const handleDoctorLogout = () => {
-        setIsDoctorLoggedIn(false);
-        setView("patient");
-    };
-
-    // Doctor Dashboard View
-    if (view === "doctor" && isDoctorLoggedIn) {
-        return (
-            <DoctorProvider>
-                <DoctorPanel onLogout={handleDoctorLogout} />
-            </DoctorProvider>
-        );
-    }
-
-    // Doctor Login View
-    if (view === "doctor" && !isDoctorLoggedIn) {
-        return (
-            <DoctorProvider>
-                <div className="min-h-screen relative">
-                    <DoctorLogin onLoginSuccess={handleDoctorLoginSuccess} />
-                    {/* Back to Patient Button */}
-                    <button
-                        onClick={() => setView("patient")}
-                        className="fixed bottom-6 right-6 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors z-50"
-                    >
-                        Back to Patient View
-                    </button>
-                </div>
-            </DoctorProvider>
-        );
-    }
-
-    // Patient Appointment View
     return (
         <div
             className="min-h-screen relative"
@@ -99,7 +66,7 @@ const App = () => {
                 }}
             />
 
-            <Header onDoctorClick={() => setView("doctor")} />
+            <Header onDoctorClick={() => navigate("/login")} />
 
             <main className="max-w-7xl mx-auto px-6 py-12 md:py-20">
                 {!isBooked ? (
@@ -140,6 +107,66 @@ const App = () => {
                 </p>
             </footer>
         </div>
+    );
+};
+
+const DoctorRouteGuard = () => {
+    const { doctorAuth, loading } = useDoctorContext();
+    const location = useLocation();
+
+    if (loading) {
+        return <div className="min-h-screen bg-slate-950" />;
+    }
+
+    if (!doctorAuth) {
+        return <Navigate to="/login" replace state={{ from: location }} />;
+    }
+
+    return <Outlet />;
+};
+
+const PublicDoctorRoute = () => {
+    const { doctorAuth, loading } = useDoctorContext();
+
+    if (loading) {
+        return <div className="min-h-screen bg-slate-950" />;
+    }
+
+    if (doctorAuth) {
+        return <Navigate to="/admin" replace />;
+    }
+
+    return <Outlet />;
+};
+
+const App = () => {
+    return (
+        <DoctorProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<ClientHomePage />} />
+                    <Route element={<PublicDoctorRoute />}>
+                        <Route path="/login" element={<DoctorLogin />} />
+                    </Route>
+                    <Route element={<DoctorRouteGuard />}>
+                        <Route path="/admin" element={<DoctorPanel />}>
+                            <Route index element={<DoctorDashboard />} />
+                        </Route>
+                        <Route path="/history" element={<DoctorPanel />}>
+                            <Route index element={<AppointmentsHistory />} />
+                        </Route>
+                        <Route path="/earnings" element={<DoctorPanel />}>
+                            <Route index element={<EarningsPage />} />
+                        </Route>
+                        <Route
+                            path="/earnigns"
+                            element={<Navigate to="/earnings" replace />}
+                        />
+                    </Route>
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+            </BrowserRouter>
+        </DoctorProvider>
     );
 };
 
