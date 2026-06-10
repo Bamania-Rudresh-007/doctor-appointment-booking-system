@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
     LayoutDashboard,
     Calendar,
@@ -10,18 +11,20 @@ import {
 } from "lucide-react";
 import { useDoctorContext } from "../context/DoctorContext.jsx";
 
-const DoctorSidebar = ({ currentPage, onNavigate, onLogout }) => {
+const DoctorSidebar = ({ onLogout }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
     const { doctorAuth } = useDoctorContext();
 
     const menuItems = [
-        { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-        { id: "history", label: "Appointment History", icon: Calendar },
-        { id: "earnings", label: "Earnings", icon: TrendingUp },
+        { path: "/admin", label: "Dashboard", icon: LayoutDashboard },
+        { path: "/history", label: "Appointment History", icon: Calendar },
+        { path: "/earnings", label: "Earnings", icon: TrendingUp },
     ];
 
-    const handleNavigation = (pageId) => {
-        onNavigate(pageId);
+    const handleNavigation = (pagePath) => {
+        navigate(pagePath);
         setIsOpen(false);
     };
 
@@ -35,20 +38,22 @@ const DoctorSidebar = ({ currentPage, onNavigate, onLogout }) => {
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className= {`md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 rounded-lg text-white ${isOpen ? 'bg-red-600' : 'bg-blue-600'}`}
+                className={`md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 rounded-lg text-white ${isOpen ? "bg-red-600" : "bg-blue-600"}`}
             >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
             {/* Sidebar */}
             <aside
-                className={`fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-slate-900 to-slate-950 border-r border-slate-700 transition-transform duration-300 z-40 ${
+                className={`fixed left-0 top-0 h-screen w-64 bg-linear-to-b from-slate-900 to-slate-950 border-r border-slate-700 transition-transform duration-300 z-40 ${
                     isOpen
                         ? "translate-x-0"
                         : "-translate-x-full md:translate-x-0"
                 }`}
             >
-                <div className={`flex flex-col h-full ${isOpen ? 'mt-12' : ''}`}>
+                <div
+                    className={`flex flex-col h-full ${isOpen ? "mt-12" : ""}`}
+                >
                     {/* Logo Section */}
                     <div className="p-6 border-b border-slate-700">
                         <div className="flex items-center gap-3">
@@ -81,11 +86,11 @@ const DoctorSidebar = ({ currentPage, onNavigate, onLogout }) => {
                     <nav className="flex-1 px-3 py-6 space-y-2">
                         {menuItems.map((item) => {
                             const Icon = item.icon;
-                            const isActive = currentPage === item.id;
+                            const isActive = location.pathname === item.path;
                             return (
                                 <button
-                                    key={item.id}
-                                    onClick={() => handleNavigation(item.id)}
+                                    key={item.path}
+                                    onClick={() => handleNavigation(item.path)}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                                         isActive
                                             ? "bg-blue-600 text-white shadow-lg shadow-blue-600/50"
@@ -103,7 +108,9 @@ const DoctorSidebar = ({ currentPage, onNavigate, onLogout }) => {
                     </nav>
 
                     {/* Logout Button */}
-                    <div className={`p-3 border-t border-slate-700 ${isOpen ? 'mb-12' : ''}`}>
+                    <div
+                        className={`p-3 border-t border-slate-700 ${isOpen ? "mb-12" : ""}`}
+                    >
                         <button
                             onClick={handleLogout}
                             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-red-600/20 text-red-400 hover:bg-red-600/30 transition-all cursor-pointer"
