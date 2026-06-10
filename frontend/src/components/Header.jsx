@@ -20,7 +20,7 @@ const Header = ({ onDoctorClick }) => (
             </div>
             <button
                 onClick={onDoctorClick}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600  hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
                 <LogIn size={18} />
                 <span className="hidden sm:inline">Doctor</span>
