@@ -3,10 +3,11 @@ import DoctorSidebar from "../components/DoctorSidebar";
 import DoctorDashboard from "./DoctorDashboard";
 import AppointmentsHistory from "./AppointmentsHistory";
 import EarningsPage from "./EarningsPage";
-import { useDoctorContext } from "../context/DoctorContext";
+import { useDoctorContext } from "../context/DoctorContext.jsx";
 
 const DoctorPanel = ({ onLogout }) => {
     const [currentPage, setCurrentPage] = useState("dashboard");
+    const { logout } = useDoctorContext();
 
     const renderPage = () => {
         switch (currentPage) {
@@ -22,7 +23,6 @@ const DoctorPanel = ({ onLogout }) => {
     };
 
     const handleLogout = () => {
-        const { logout } = useDoctorContext();
         logout();
         onLogout();
     };
