@@ -1,45 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import DoctorSidebar from "../components/DoctorSidebar";
-import DoctorDashboard from "./DoctorDashboard";
-import AppointmentsHistory from "./AppointmentsHistory";
-import EarningsPage from "./EarningsPage";
 import { useDoctorContext } from "../context/DoctorContext.jsx";
 
-const DoctorPanel = ({ onLogout }) => {
-    const [currentPage, setCurrentPage] = useState("dashboard");
+const DoctorPanel = () => {
     const { logout } = useDoctorContext();
-
-    const renderPage = () => {
-        switch (currentPage) {
-            case "dashboard":
-                return <DoctorDashboard />;
-            case "history":
-                return <AppointmentsHistory />;
-            case "earnings":
-                return <EarningsPage />;
-            default:
-                return <DoctorDashboard />;
-        }
-    };
+    const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
-        onLogout();
+        navigate("/login", { replace: true });
     };
 
     return (
-        <div className="flex h-screen bg-gradient-to-br from-slate-900 to-slate-950 overflow-hidden">
+        <div className="flex h-screen bg-linear-to-br from-slate-900 to-slate-950 overflow-hidden">
             {/* Sidebar */}
-            <DoctorSidebar
-                currentPage={currentPage}
-                onNavigate={setCurrentPage}
-                onLogout={handleLogout}
-            />
+            <DoctorSidebar onLogout={handleLogout} />
 
             {/* Main Content */}
             <main className="flex-1 overflow-auto md:ml-64">
                 {/* Mobile padding for fixed menu button */}
-                <div className="p-4 md:p-8 pt-16 md:pt-8">{renderPage()}</div>
+                <div className="p-4 md:p-8 pt-16 md:pt-8">
+                    <Outlet />
+                </div>
             </main>
         </div>
     );
