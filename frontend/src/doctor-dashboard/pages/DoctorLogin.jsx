@@ -1,34 +1,33 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useDoctorContext } from "../context/DoctorContext";
 import { DOCTOR_DUMMY_LOGIN } from "../utils/dummyData";
 
-const DoctorLogin = ({ onLoginSuccess }) => {
+const DoctorLogin = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useDoctorContext();
+    const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setError("");
         setIsLoading(true);
 
-        // Validate inputs
         if (!email || !password) {
             setError("Please fill in all fields");
             setIsLoading(false);
             return;
         }
 
-        // Simulate login (In production, this would call backend API)
         setTimeout(() => {
             try {
                 login(email, password);
-                setIsLoading(false);
-                onLoginSuccess();
+                navigate("/admin", { replace: true });
             } catch (err) {
                 setError("Login failed. Please try again.");
                 setIsLoading(false);
@@ -45,7 +44,6 @@ const DoctorLogin = ({ onLoginSuccess }) => {
                     "radial-gradient(at 20% 80%, rgba(59,130,246,0.15) 0, transparent 50%), radial-gradient(at 80% 20%, rgba(147,51,234,0.1) 0, transparent 50%)",
             }}
         >
-            {/* Background Elements */}
             <div
                 className="fixed pointer-events-none"
                 style={{
@@ -61,13 +59,11 @@ const DoctorLogin = ({ onLoginSuccess }) => {
                 }}
             />
 
-            {/* Login Card */}
             <div className="relative z-10 w-full max-w-md">
-                <div className="bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
-                    {/* Header */}
+                <div className="bg-linear-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
                     <div className="text-center mb-8">
                         <div className="flex justify-center mb-4">
-                            <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/50">
+                            <div className="w-14 h-14 bg-linear-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/50">
                                 <span className="text-white font-bold text-2xl">
                                     M
                                 </span>
@@ -76,21 +72,21 @@ const DoctorLogin = ({ onLoginSuccess }) => {
                         <h1 className="text-3xl font-bold text-white mb-2">
                             MedFlow
                         </h1>
-                        <p className="text-gray-400">Doctor's Admin Panel</p>
+                        <p className="text-gray-400">
+                            Doctor&apos;s Admin Panel
+                        </p>
                     </div>
 
-                    {/* Error Alert */}
                     {error && (
-                        <div className="mb-6 p-4 bg-red-600/20 border border-red-500/30 rounded-lg flex items-gap-3">
+                        <div className="mb-6 p-4 bg-red-600/20 border border-red-500/30 rounded-lg flex items-center gap-3">
                             <AlertCircle
                                 size={20}
-                                className="text-red-400 flex-shrink-0"
+                                className="text-red-400 shrink-0"
                             />
                             <p className="text-red-400 text-sm">{error}</p>
                         </div>
                     )}
 
-                    {/* Demo Credentials Info */}
                     <div className="mb-6 p-4 bg-blue-600/20 border border-blue-500/30 rounded-lg">
                         <p className="text-xs text-gray-400 mb-2 font-semibold">
                             Demo Credentials:
@@ -103,9 +99,7 @@ const DoctorLogin = ({ onLoginSuccess }) => {
                         </p>
                     </div>
 
-                    {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* Email Field */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-300 mb-2">
                                 Email Address
@@ -125,7 +119,6 @@ const DoctorLogin = ({ onLoginSuccess }) => {
                             </div>
                         </div>
 
-                        {/* Password Field */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-300 mb-2">
                                 Password
@@ -160,17 +153,15 @@ const DoctorLogin = ({ onLoginSuccess }) => {
                             </div>
                         </div>
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-600/50 hover:shadow-blue-600/70 disabled:shadow-none"
+                            className="w-full py-3 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-600/50 hover:shadow-blue-600/70 disabled:shadow-none"
                         >
                             {isLoading ? "Logging in..." : "Login to Dashboard"}
                         </button>
                     </form>
 
-                    {/* Footer */}
                     <p className="text-center text-xs text-gray-500 mt-6">
                         For demo purposes only. In production, credentials will
                         be verified with backend API.
