@@ -5,9 +5,9 @@ import './index.css'
 import { AppointmentProvider } from './context/AppointmentContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  //<React.StrictMode>
     <AppointmentProvider>
       <App />
     </AppointmentProvider>
-  </React.StrictMode>,
+  //</React.StrictMode>,
 )
