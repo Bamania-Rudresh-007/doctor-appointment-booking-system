@@ -52,12 +52,13 @@ const AppointmentCard = ({ appointment, onStatusChange, onFeePaidChange }) => {
                         <StatusBadge status={appointment.status} />
                         <button
                             onClick={() => setIsExpanded(!isExpanded)}
-                            className="p-2 bg-slate-700/50 hover:bg-slate-700 rounded-lg transition-colors text-gray-300 hover:text-white cursor-pointer"
+                            className="p-2 bg-slate-700/50 hover:bg-slate-700 rounded-lg transition-colors text-gray-300 hover:text-white cursor-pointer flex items-center gap-1 text-sm font-semibold"
                         >
                             <ChevronDown
                                 size={20}
-                                className={`transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                                className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} 
                             />
+                            More Info 
                         </button>
                     </div>
                 </div>
