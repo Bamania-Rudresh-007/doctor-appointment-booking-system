@@ -25,7 +25,7 @@ const FormCard = () => {
             <button
               type="button"
               onClick={() => updateAppointment('category', 'regular')}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition-all cursor-pointer ${
                 appointment.category === 'regular'
                   ? 'border-blue-500 bg-blue-50 text-blue-700'
                   : 'border-gray-100 text-gray-400 hover:border-gray-200'
@@ -37,7 +37,7 @@ const FormCard = () => {
             <button
               type="button"
               onClick={() => updateAppointment('category', 'emergency')}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition-all cursor-pointer ${
                 appointment.category === 'emergency'
                   ? 'border-red-500 bg-red-50 text-red-700'
                   : 'border-gray-100 text-gray-400 hover:border-gray-200'
@@ -96,7 +96,7 @@ const FormCard = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-blue-200 transition-all transform hover:scale-[1.01] active:scale-[0.99]"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-blue-200 transition-all transform hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
         >
           Confirm & Book Appointment
         </button>
