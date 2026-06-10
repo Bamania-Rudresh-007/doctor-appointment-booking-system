@@ -61,7 +61,7 @@ export const updateAppointmentFeePaid = (appointmentId, feePaid) => {
 };
 
 export const logoutDoctor = () => {
-    localStorage.removeItem(STORAGE_KEYS.DOCTOR_AUTH);
+    localStorage.removeItem('doctor_auth');
 };
 
 export const isDoctorAuthenticated = () => {
