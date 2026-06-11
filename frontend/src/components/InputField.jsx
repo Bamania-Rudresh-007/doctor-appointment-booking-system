@@ -11,7 +11,7 @@ const InputField = ({ label, type = 'text', value, onChange, placeholder, option
           <select 
             value={value} 
             onChange={(e) => onChange(e.target.value)} 
-            className={baseClasses}
+            className={`${baseClasses} cursor-pointer`}
           >
             <option value="">-- Select {label} --</option>
             {options.map((opt) => (
