@@ -91,7 +91,7 @@ const DoctorSidebar = ({ onLogout }) => {
                                 <button
                                     key={item.path}
                                     onClick={() => handleNavigation(item.path)}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${
                                         isActive
                                             ? "bg-blue-600 text-white shadow-lg shadow-blue-600/50"
                                             : "text-gray-400 hover:bg-slate-800 hover:text-white"
