@@ -73,7 +73,7 @@ const AppointmentCard = ({ appointment, onStatusChange, onFeePaidChange }) => {
                     </div>
                     <button
                         onClick={handleFeePaidToggle}
-                        className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                        className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${
                             appointment.feePaid
                                 ? "bg-green-600/20 text-green-400 border border-green-500/30"
                                 : "bg-slate-700/50 text-gray-400 border border-slate-600 hover:bg-slate-700"
@@ -130,9 +130,9 @@ const AppointmentCard = ({ appointment, onStatusChange, onFeePaidChange }) => {
                             {["Pending", "Completed", "Cancelled"].map((status) => {
                                 const isActive = appointment.status === status;
                                 const colorMap = {
-                                    Pending:   isActive ? "bg-yellow-600/30 text-yellow-400 border-yellow-500/40" : "text-gray-400 border-slate-600 hover:bg-yellow-600/10 hover:text-yellow-400 hover:border-yellow-500/30",
-                                    Completed: isActive ? "bg-green-600/30 text-green-400 border-green-500/40"   : "text-gray-400 border-slate-600 hover:bg-green-600/10 hover:text-green-400 hover:border-green-500/30",
-                                    Cancelled: isActive ? "bg-red-600/30 text-red-400 border-red-500/40"         : "text-gray-400 border-slate-600 hover:bg-red-600/10 hover:text-red-400 hover:border-red-500/30",
+                                    Pending:   isActive ? "bg-yellow-600/30 text-yellow-400 border-yellow-500/40" : "text-gray-400 border-slate-600 hover:bg-yellow-600/10 hover:text-yellow-400 hover:border-yellow-500/30 cursor-pointer",
+                                    Completed: isActive ? "bg-green-600/30 text-green-400 border-green-500/40"   : "text-gray-400 border-slate-600 hover:bg-green-600/10 hover:text-green-400 hover:border-green-500/30 cursor-pointer",
+                                    Cancelled: isActive ? "bg-red-600/30 text-red-400 border-red-500/40"         : "text-gray-400 border-slate-600 hover:bg-red-600/10 hover:text-red-400 hover:border-red-500/30 cursor-pointer",
                                 };
                                 return (
                                     <button
