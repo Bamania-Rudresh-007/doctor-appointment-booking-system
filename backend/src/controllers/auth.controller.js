@@ -2,10 +2,10 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/admin.model.js";
 import bcrypt from "bcrypt";
 
-// ==========================================
+
 // 1. LOGIN CONTROLLER
-// ==========================================
-export const login = async (req, res) => {
+
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -61,10 +61,10 @@ export const login = async (req, res) => {
     }
 };
 
-// ==========================================
+
 // 2. REFRESH TOKEN ROTATION CONTROLLER
-// ==========================================
-export const refreshAccessToken = async (req, res) => {
+
+const refreshAccessToken = async (req, res) => {
     try {
         const cookies = req.cookies;
         if (!cookies?.refreshToken) {
@@ -144,10 +144,10 @@ export const refreshAccessToken = async (req, res) => {
     }
 };
 
-// ==========================================
+
 // 3. LOGOUT CONTROLLER
-// ==========================================
-export const logout = async (req, res) => {
+
+const logout = async (req, res) => {
     try {
         const cookies = req.cookies;
         if (!cookies?.refreshToken) {
@@ -184,3 +184,54 @@ export const logout = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
+
+// AdminRegistration Controller
+
+const registerAdmin = async (req, res) => {
+    try{
+        const {name , email, password} = req.body;
+
+        if(!name || !email || !password){
+            return res.status(400).json({
+                success: false,
+                message: "All Fields are required"
+            })
+        }
+
+        const emailExists = await Admin.findOne({ email });
+        if (emailExists) {
+            return res.status(400).json({
+                success: false,
+                message: "An admin account with this email already exists"
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+
+        const newUser = await Admin.create({
+            name,
+            email,
+            password: hashedPassword,
+        })
+
+        const userResponse = newUser.toObject();
+        delete userResponse.password;
+
+        
+        return res.status(201).json({
+            success: true,
+            message: "New Admin created successfully", 
+            data: {
+                user: userResponse,
+            }
+        })
+
+
+    }   
+    catch(err){
+        console.error("Registration Error: ", err);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
+
+export {login, refreshAccessToken, logout, registerAdmin};
