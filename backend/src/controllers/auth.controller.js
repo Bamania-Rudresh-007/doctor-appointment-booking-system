@@ -234,4 +234,27 @@ const registerAdmin = async (req, res) => {
     }
 }
 
-export {login, refreshAccessToken, logout, registerAdmin};
+// getAll admins controller
+
+const getAdmins = async (req, res) => {
+    try{
+        const allAdmin = await Admin.find()
+            .select("-password -refreshToken")
+            .lean();
+;
+
+        return res.status(200).json({
+            success: true,
+            message: "All admin data fetched Successfully",
+            data: {
+                admins: allAdmin,
+            }
+        })
+    }
+    catch(err){
+        console.error("Error while fetching all Admins : ", err);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
+
+export {login, refreshAccessToken, logout, registerAdmin, getAdmins};
