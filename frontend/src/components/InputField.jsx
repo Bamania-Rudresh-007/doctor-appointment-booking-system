@@ -1,7 +1,7 @@
 import React from 'react';
 
-const InputField = ({ label, type = 'text', minVal, maxVal, value, onChange, placeholder, options, icon: Icon }) => {
-  const baseClasses = "w-full p-4 border border-gray-100 rounded-xl bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300 shadow-sm";
+const InputField = ({ label, type = 'text', minVal, maxVal, disabled, value, onChange, placeholder, options, icon: Icon }) => {
+  const baseClasses = "w-full p-4 border border-gray-100 rounded-xl bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300 shadow-sm disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed";
   
   return (
     <div className="flex flex-col gap-2">
@@ -11,6 +11,7 @@ const InputField = ({ label, type = 'text', minVal, maxVal, value, onChange, pla
           <select 
             value={value} 
             onChange={(e) => onChange(e.target.value)} 
+            disabled={disabled}
             className={`${baseClasses} cursor-pointer`}
           >
             <option value="">-- Select {label} --</option>
@@ -22,45 +23,35 @@ const InputField = ({ label, type = 'text', minVal, maxVal, value, onChange, pla
           <textarea
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            disabled={disabled}
             placeholder={placeholder}
             className={`${baseClasses} min-h-[100px] resize-none`}
           />
-        ) :  type === "date" ?(
+        ) : type === "date" || type === "time" ? (
           <div className="relative">
             <input
               type={type}
               value={value}
               min={minVal}
               max={maxVal}
+              disabled={disabled} // Correctly attaches the disabled status
               onChange={(e) => onChange(e.target.value)}
               placeholder={placeholder}
-              className={`${baseClasses} ${Icon ? 'pl-10' : ''}`}
+              className={`${baseClasses} ${Icon ? 'pl-11' : ''}`}
             />
-            {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />}
-          </div>
-        ) : type === "time" ? (
-          <div className="relative">
-            <input
-              type={type}
-              value={value}
-              min={minVal}
-              max={maxVal}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder={placeholder}
-              className={`${baseClasses} ${Icon ? 'pl-10' : ''}`}
-            />
-            {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />}
+            {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />}
           </div>
         ) : (
           <div className="relative">
             <input
               type={type}
               value={value}
+              disabled={disabled}
               onChange={(e) => onChange(e.target.value)}
               placeholder={placeholder}
-              className={`${baseClasses} ${Icon ? 'pl-10' : ''}`}
+              className={`${baseClasses} ${Icon ? 'pl-11' : ''}`}
             />
-            {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />}
+            {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />}
           </div>
         )}
       </div>
