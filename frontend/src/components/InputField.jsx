@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InputField = ({ label, type = 'text', value, onChange, placeholder, options, icon: Icon }) => {
+const InputField = ({ label, type = 'text', minVal, maxVal, value, onChange, placeholder, options, icon: Icon }) => {
   const baseClasses = "w-full p-4 border border-gray-100 rounded-xl bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300 shadow-sm";
   
   return (
@@ -25,6 +25,32 @@ const InputField = ({ label, type = 'text', value, onChange, placeholder, option
             placeholder={placeholder}
             className={`${baseClasses} min-h-[100px] resize-none`}
           />
+        ) :  type === "date" ?(
+          <div className="relative">
+            <input
+              type={type}
+              value={value}
+              min={minVal}
+              max={maxVal}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={placeholder}
+              className={`${baseClasses} ${Icon ? 'pl-10' : ''}`}
+            />
+            {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />}
+          </div>
+        ) : type === "time" ? (
+          <div className="relative">
+            <input
+              type={type}
+              value={value}
+              min={minVal}
+              max={maxVal}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={placeholder}
+              className={`${baseClasses} ${Icon ? 'pl-10' : ''}`}
+            />
+            {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />}
+          </div>
         ) : (
           <div className="relative">
             <input
