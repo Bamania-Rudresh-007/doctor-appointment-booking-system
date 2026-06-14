@@ -24,13 +24,7 @@ export const AppointmentProvider = ({ children }) => {
   };
 
   const bookAppointment = () => {
-    const hasEmptyField = Object.values(appointment).some(value => value.trim() === '');
-
-    if (hasEmptyField) {
-        alert('Please fill out all fields.');
-        return;
-    }
-
+    
     const newBooking = {
       ...appointment,
       id: Math.random().toString(36).substr(2, 9),
