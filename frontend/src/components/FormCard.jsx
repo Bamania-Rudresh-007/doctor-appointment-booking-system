@@ -14,6 +14,21 @@ const FormCard = () => {
     bookAppointment();
   };
 
+  const handleMinDate = () => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+
+    return formattedDate;
+  }
+
+  const handleMaxDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 7);
+    const formattedDate = date.toISOString().split('T')[0];
+
+    return formattedDate;
+  }
+
   return (
     <GlassCard className="h-full border border-white/40 shadow-2xl">
       <SectionTitle>Schedule an Appointment</SectionTitle>
@@ -67,6 +82,8 @@ const FormCard = () => {
           <InputField
             label="Preferred Date"
             type="date"
+            minVal={handleMinDate()}
+            maxVal={handleMaxDate()}
             value={appointment.date}
             onChange={(v) => updateAppointment('date', v)}
           />
