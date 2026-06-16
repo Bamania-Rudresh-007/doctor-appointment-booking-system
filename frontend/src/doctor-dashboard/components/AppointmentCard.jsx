@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown, Eye, AlertCircle } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 import { useDoctorContext } from "../context/DoctorContext";
