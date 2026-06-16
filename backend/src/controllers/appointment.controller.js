@@ -76,5 +76,23 @@ const updateAppointment = async (req, res) => {
     }
 };
 
+const getAllAppointments = async (req, res) => {
+    try {
+        const appointments = await Appointment.find();
+        return res.status(200).json({
+            success: true,
+            message: "Appointments retrieved successfully",
+            data: {
+                appointments
+            }
+        });
+    } catch (err) {
+        console.error("Error fetching appointments: ", err);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
 
-export { registerAppointment, updateAppointment };
+export { registerAppointment, updateAppointment, getAllAppointments };
