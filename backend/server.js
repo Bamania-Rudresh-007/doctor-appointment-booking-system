@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { corsOptions } from "./src/config/corsConfig.js";
 import authRouter from "./src/routes/auth.route.js";
+import appointmentRouter from "./src/routes/appointment.route.js";
 
 const app = express();
 const port = process.env.PORT || 7000;
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
+app.use("/api/appointment", appointmentRouter);
 app.get("/", (req, res) => {
     res.end("Hey welcome to the carefirst clinic backend api's !!!...");
 });
