@@ -165,7 +165,7 @@ const FormCard = () => {
 
         <InputField
           label="Full Name"
-          placeholder="John Doe"
+          placeholder="Bamania Rudresh Vinaychandra"
           icon={User}
           value={appointment.fullName}
           onChange={(v) => updateAppointment('fullName', v)}
