@@ -1,6 +1,6 @@
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL, 
+  process.env.FRONTEND_URL,
   'https://staging-frontend.com'
 ];
 
