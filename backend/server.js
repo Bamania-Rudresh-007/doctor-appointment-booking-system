@@ -1,5 +1,5 @@
-import express from "express";
 import "dotenv/config";
+import express from "express";
 import connectDB from "./src/config/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
-app.use("/api/appointment", appointmentRouter);
+app.use("/api/appointments", appointmentRouter);
 app.get("/", (req, res) => {
     res.end("Hey welcome to the carefirst clinic backend api's !!!...");
 });
