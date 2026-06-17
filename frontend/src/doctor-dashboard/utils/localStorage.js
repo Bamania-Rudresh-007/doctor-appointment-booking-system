@@ -3,6 +3,19 @@ import { DUMMY_APPOINTMENTS, DOCTOR_DUMMY_LOGIN } from "./dummyData";
 const STORAGE_KEYS = {
     DOCTOR_AUTH: "doctor_auth",
     DOCTOR_APPOINTMENTS: "doctor_appointments",
+    ACCESS_TOKEN: "accessToken",
+};
+
+export const saveAccessToken = (token) => {
+    localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
+};
+
+export const getAccessToken = () => {
+    return localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+};
+
+export const clearAccessToken = () => {
+    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
 };
 
 export const initializeDoctorData = () => {
@@ -14,12 +27,14 @@ export const initializeDoctorData = () => {
     }
 };
 
-export const saveDoctorLogin = (email, password) => {
+export const saveDoctorLogin = (email) => {
     const doctorData = {
         email,
         isAuthenticated: true,
         loginTime: new Date().toISOString(),
-        ...DOCTOR_DUMMY_LOGIN,
+        name: DOCTOR_DUMMY_LOGIN.name,
+        specialization: DOCTOR_DUMMY_LOGIN.specialization,
+        clinicName: DOCTOR_DUMMY_LOGIN.clinicName,
     };
     localStorage.setItem(STORAGE_KEYS.DOCTOR_AUTH, JSON.stringify(doctorData));
     return doctorData;
@@ -61,10 +76,10 @@ export const updateAppointmentFeePaid = (appointmentId, feePaid) => {
 };
 
 export const logoutDoctor = () => {
-    localStorage.removeItem('doctor_auth');
+    localStorage.removeItem(STORAGE_KEYS.DOCTOR_AUTH);
+    clearAccessToken();
 };
 
 export const isDoctorAuthenticated = () => {
-    const auth = getDoctorAuth();
-    return auth && auth.isAuthenticated;
+    return Boolean(getAccessToken() && getDoctorAuth()?.isAuthenticated);
 };
