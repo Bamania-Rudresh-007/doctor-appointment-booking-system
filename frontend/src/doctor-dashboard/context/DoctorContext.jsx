@@ -1,59 +1,150 @@
 import React, { createContext, useState, useCallback, useEffect } from "react";
+import userService from "../../api/userService";
 import {
     saveDoctorLogin,
     getDoctorAuth,
-    getDoctorAppointments,
-    updateAppointmentStatus,
-    updateAppointmentFeePaid,
+    getAccessToken,
+    saveAccessToken,
     logoutDoctor,
-    initializeDoctorData,
 } from "../utils/localStorage";
 
 export const DoctorContext = createContext();
+
+const mapAppointmentFromApi = (apt) => ({
+    ...apt,
+    id: apt._id || apt.id,
+    category: apt.category
+        ? apt.category.charAt(0).toUpperCase() + apt.category.slice(1).toLowerCase()
+        : apt.category,
+    bookedDate: apt.createdAt
+        ? new Date(apt.createdAt).toLocaleDateString("en-US", { dateStyle: "short" })
+        : apt.bookedDate || "",
+});
 
 export const DoctorProvider = ({ children }) => {
     const [doctorAuth, setDoctorAuth] = useState(null);
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Initialize doctor data on mount
+    const fetchAppointments = useCallback(async () => {
+        const response = await userService.getAllAppointments();
+        const list = response?.data?.appointments || [];
+        setAppointments(list.map(mapAppointmentFromApi));
+    }, []);
+
     useEffect(() => {
-        initializeDoctorData();
-        const auth = getDoctorAuth();
-        if (auth) {
-            setDoctorAuth(auth);
-            setAppointments(getDoctorAppointments());
+        const init = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const token = getAccessToken();
+                const auth = getDoctorAuth();
+                if (token && auth) {
+                    setDoctorAuth(auth);
+                    await fetchAppointments();
+                }
+            } catch (err) {
+                setError(
+                    err.response?.data?.message ||
+                        err.message ||
+                        "Failed to load appointments",
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
+        init();
+    }, [fetchAppointments]);
+
+    const login = useCallback(
+        async (email, password) => {
+            setError(null);
+            const response = await userService.login({ email, password });
+            if (!response?.success) {
+                throw new Error(response?.message || "Login failed");
+            }
+            saveAccessToken(response.data.accessToken);
+            const doctor = saveDoctorLogin(email);
+            setDoctorAuth(doctor);
+            await fetchAppointments();
+            return doctor;
+        },
+        [fetchAppointments],
+    );
+
+    const logout = useCallback(async () => {
+        try {
+            await userService.logout();
+        } catch (err) {
+            console.error("Logout error:", err);
+        } finally {
+            logoutDoctor();
+            setDoctorAuth(null);
+            setAppointments([]);
+            setError(null);
         }
-        setLoading(false);
     }, []);
 
-    const login = useCallback((email, password) => {
-        const doctor = saveDoctorLogin(email, password);
-        setDoctorAuth(doctor);
-        setAppointments(getDoctorAppointments());
-        return doctor;
+    const updateStatus = useCallback(async (appointmentId, status) => {
+        try {
+            setError(null);
+            const response = await userService.updateAppointment({
+                _id: appointmentId,
+                changes: { status },
+            });
+            const updated = response?.data?.appointment;
+            if (updated) {
+                setAppointments((prev) =>
+                    prev.map((apt) =>
+                        apt.id === appointmentId
+                            ? mapAppointmentFromApi(updated)
+                            : apt,
+                    ),
+                );
+            }
+        } catch (err) {
+            setError(
+                err.response?.data?.message ||
+                    err.message ||
+                    "Failed to update appointment status",
+            );
+            throw err;
+        }
     }, []);
 
-    const logout = useCallback(() => {
-        logoutDoctor();
-        setDoctorAuth(null);
-        setAppointments([]);
-    }, []);
-
-    const updateStatus = useCallback((appointmentId, status) => {
-        const updated = updateAppointmentStatus(appointmentId, status);
-        setAppointments(updated);
-    }, []);
-
-    const updateFeePaid = useCallback((appointmentId, feePaid) => {
-        const updated = updateAppointmentFeePaid(appointmentId, feePaid);
-        setAppointments(updated);
+    const updateFeePaid = useCallback(async (appointmentId, feePaid) => {
+        try {
+            setError(null);
+            const response = await userService.updateAppointment({
+                _id: appointmentId,
+                changes: { feePaid },
+            });
+            const updated = response?.data?.appointment;
+            if (updated) {
+                setAppointments((prev) =>
+                    prev.map((apt) =>
+                        apt.id === appointmentId
+                            ? mapAppointmentFromApi(updated)
+                            : apt,
+                    ),
+                );
+            }
+        } catch (err) {
+            setError(
+                err.response?.data?.message ||
+                    err.message ||
+                    "Failed to update payment status",
+            );
+            throw err;
+        }
     }, []);
 
     const value = {
         doctorAuth,
         appointments,
         loading,
+        error,
         login,
         logout,
         updateStatus,
