@@ -95,4 +95,26 @@ const getAllAppointments = async (req, res) => {
     }
 };
 
-export { registerAppointment, updateAppointment, getAllAppointments };
+const getLatestAppointmentTime = async (req, res) => {
+    try {
+        const latestAppointment = await Appointment.findOne().sort({createdAt: -1 });
+        const isoStr = latestAppointment.createdAt;
+        const time = new Date(isoStr).toLocaleTimeString();
+        return res.status(200).json({
+            success: true,
+            message: "Latest appointment time retrieved successfully",
+            data: {
+                latestAppointment,
+                time
+            }
+        });
+    } catch (err) {
+        console.error("Error fetching latest appointment time: ", err);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};  
+
+export { registerAppointment, updateAppointment, getAllAppointments, getLatestAppointmentTime };
