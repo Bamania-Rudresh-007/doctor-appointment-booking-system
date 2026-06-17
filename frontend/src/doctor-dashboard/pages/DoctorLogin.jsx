@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useDoctorContext } from "../context/DoctorContext";
 import { DOCTOR_DUMMY_LOGIN } from "../utils/dummyData";
+import Loader from "../../components/Loader";
 
 const DoctorLogin = () => {
     const [email, setEmail] = useState("");
@@ -13,27 +14,37 @@ const DoctorLogin = () => {
     const { login } = useDoctorContext();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
-        setIsLoading(true);
 
         if (!email || !password) {
             setError("Please fill in all fields");
-            setIsLoading(false);
             return;
         }
 
-        setTimeout(() => {
-            try {
-                login(email, password);
-                navigate("/admin", { replace: true });
-            } catch (err) {
-                setError("Login failed. Please try again.");
-                setIsLoading(false);
-            }
-        }, 500);
+        setIsLoading(true);
+        try {
+            await login(email, password);
+            navigate("/admin", { replace: true });
+        } catch (err) {
+            setError(
+                err.response?.data?.message ||
+                    err.message ||
+                    "Login failed. Please try again.",
+            );
+        } finally {
+            setIsLoading(false);
+        }
     };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-slate-950">
+                <Loader />
+            </div>
+        );
+    }
 
     return (
         <div
@@ -158,7 +169,7 @@ const DoctorLogin = () => {
                             disabled={isLoading}
                             className="w-full py-3 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-600/50 hover:shadow-blue-600/70 disabled:shadow-none"
                         >
-                            {isLoading ? "Logging in..." : "Login to Dashboard"}
+                            Login to Dashboard
                         </button>
                     </form>
 
