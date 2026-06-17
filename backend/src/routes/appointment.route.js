@@ -7,6 +7,6 @@ const appointmentRouter = express.Router();
 appointmentRouter.post("/register", registerAppointment);
 appointmentRouter.put("/update", protect, updateAppointment);
 appointmentRouter.get("/all", protect, getAllAppointments);
-appointmentRouter.get("/latest", protect, getLatestAppointmentTime);
+appointmentRouter.get("/latest", getLatestAppointmentTime);
 
 export default appointmentRouter;
