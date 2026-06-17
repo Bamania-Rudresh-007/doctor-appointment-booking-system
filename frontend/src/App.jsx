@@ -5,18 +5,16 @@ import {
     Outlet,
     Route,
     Routes,
-    useLocation,
     useNavigate,
 } from "react-router-dom";
 import Header from "./components/Header";
 import FormCard from "./components/FormCard";
 import Sidebar from "./components/Sidebar";
 import ReceiptCard from "./components/ReceiptCard";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { useAppointment } from "./context/AppointmentContext";
-import {
-    DoctorProvider,
-    useDoctorContext,
-} from "./doctor-dashboard/context/DoctorContext";
+import { DoctorProvider } from "./doctor-dashboard/context/DoctorContext";
+import { getAccessToken } from "./doctor-dashboard/utils/localStorage";
 import DoctorLogin from "./doctor-dashboard/pages/DoctorLogin";
 import DoctorPanel from "./doctor-dashboard/pages/DoctorPanel";
 import DoctorDashboard from "./doctor-dashboard/pages/DoctorDashboard";
@@ -110,29 +108,8 @@ const ClientHomePage = () => {
     );
 };
 
-const DoctorRouteGuard = () => {
-    const { doctorAuth, loading } = useDoctorContext();
-    const location = useLocation();
-
-    if (loading) {
-        return <div className="min-h-screen bg-slate-950" />;
-    }
-
-    if (!doctorAuth) {
-        return <Navigate to="/login" replace state={{ from: location }} />;
-    }
-
-    return <Outlet />;
-};
-
 const PublicDoctorRoute = () => {
-    const { doctorAuth, loading } = useDoctorContext();
-
-    if (loading) {
-        return <div className="min-h-screen bg-slate-950" />;
-    }
-
-    if (doctorAuth) {
+    if (getAccessToken()) {
         return <Navigate to="/admin" replace />;
     }
 
@@ -148,7 +125,7 @@ const App = () => {
                     <Route element={<PublicDoctorRoute />}>
                         <Route path="/login" element={<DoctorLogin />} />
                     </Route>
-                    <Route element={<DoctorRouteGuard />}>
+                    <Route element={<ProtectedRoute />}>
                         <Route path="/admin" element={<DoctorPanel />}>
                             <Route index element={<DoctorDashboard />} />
                         </Route>
