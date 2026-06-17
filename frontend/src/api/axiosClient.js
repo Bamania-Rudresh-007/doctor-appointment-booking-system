@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { getAccessToken, clearAccessToken } from '../doctor-dashboard/utils/localStorage';
 
 // 1. Create custom instance with environment variables
 const axiosClient = axios.create({
-  baseURL: process.env.BACKEND_API_URL || "localhost:7300/api",
+  baseURL: import.meta.env.BACKEND_API_URL || "http://localhost:7300/api",
   timeout: 10000, // 10 seconds timeout window
   headers: {
     'Content-Type': 'application/json',
@@ -13,7 +14,8 @@ const axiosClient = axios.create({
 // 2. Request Interceptor: Inject Auth Tokens automatically
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken'); // or secure cookies
+    config.withCredentials = true;
+    const token = getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -36,9 +38,11 @@ axiosClient.interceptors.response.use(
       const status = error.response.status;
       
       if (status === 401) {
-        // Token expired / Unauthorized -> Auto logout or refresh token logic
-        localStorage.removeItem('accessToken');
-        window.location.href = '/login';
+        const hadToken = Boolean(getAccessToken());
+        clearAccessToken();
+        if (hadToken) {
+          window.location.href = '/login';
+        }
       } else if (status === 403) {
         console.error('Forbidden: Access denied.');
       } else if (status === 500) {
