@@ -1,8 +1,20 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import userService from '../api/userService';
 
 const AppointmentContext = createContext();
 
 export const useAppointment = () => useContext(AppointmentContext);
+
+const parseTimeToHHMM = (timeStr) => {
+  if (!timeStr) return '08:00';
+  const match = timeStr.match(/(\d{1,2}):(\d{2})/);
+  if (!match) return '08:00';
+  let hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  if (/PM/i.test(timeStr) && hours !== 12) hours += 12;
+  if (/AM/i.test(timeStr) && hours === 12) hours = 0;
+  return `${String(hours).padStart(2, '0')}:${minutes}`;
+};
 
 export const AppointmentProvider = ({ children }) => {
   const [appointment, setAppointment] = useState({
@@ -15,51 +27,74 @@ export const AppointmentProvider = ({ children }) => {
     notes: '',
   });
 
-  const [bookingHistory, setBookingHistory] = useState([]);
   const [isBooked, setIsBooked] = useState(false);
   const [lastBooking, setLastBooking] = useState(null);
+  const [slotsLoading, setSlotsLoading] = useState(true);
+  const [slotsError, setSlotsError] = useState(null);
+  const [apiMinTime, setApiMinTime] = useState('08:00');
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState(null);
+
+  const fetchLatestAppointmentTime = useCallback(async () => {
+    try {
+      setSlotsLoading(true);
+      setSlotsError(null);
+      const response = await userService.getLatestAppointmentTime();
+      const time = response?.data?.time;
+      setApiMinTime(parseTimeToHHMM(time));
+    } catch (err) {
+      const isUnauthorized = err.response?.status === 401;
+      if (!isUnauthorized) {
+        setSlotsError(
+          err.response?.data?.message ||
+            err.message ||
+            'Unable to load available time slots',
+        );
+      }
+      setApiMinTime('08:00');
+    } finally {
+      setSlotsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLatestAppointmentTime();
+  }, [fetchLatestAppointmentTime]);
 
   const updateAppointment = (field, value) => {
     setAppointment((prev) => ({ ...prev, [field]: value }));
   };
 
-  const bookAppointment = () => {
-    
-    const newBooking = {
-      ...appointment,
-      id: Math.random().toString(36).substr(2, 9),
-      timestamp: new Date().toISOString(),
-    };
-    console.log(newBooking);
-    setBookingHistory((prev) => [newBooking, ...prev]);
-    setLastBooking(newBooking);
-    setIsBooked(true);
-
-    const localData = JSON.parse(localStorage.getItem("doctor_appointments")) || [];
-    const today = new Date().toLocaleDateString('en-US', { dateStyle: 'short' });
-    const data = {
-        id: newBooking.id,
-        name: newBooking.fullName,
-        phoneNumber: newBooking.phoneNumber,
-        appointmentDate: newBooking.date,
-        appointmentTime: newBooking.time,
-        category: newBooking.category,
-        paymentMethod: newBooking.paymentMethod,
-        fee: newBooking.category === "regular" ? 500 : 1000,
-        symptoms: newBooking.notes,
-        status: "Pending",
-        feePaid: false,
-        bookedDate: today,
+  const bookAppointment = async () => {
+    try {
+      setBookingLoading(true);
+      setBookingError(null);
+      const response = await userService.registerAppointment(appointment);
+      if (!response?.success) {
+        throw new Error(response?.message || 'Failed to book appointment');
+      }
+      const created = response.data.appointment;
+      const newBooking = {
+        ...appointment,
+        id: created._id,
+        timestamp: created.createdAt || new Date().toISOString(),
+      };
+      setLastBooking(newBooking);
+      setIsBooked(true);
+    } catch (err) {
+      setBookingError(
+        err.response?.data?.message ||
+          err.message ||
+          'Failed to book appointment',
+      );
+    } finally {
+      setBookingLoading(false);
     }
-    localData.push(data)
-    localStorage.setItem("doctor_appointments", JSON.stringify(localData));
-    
-    // Reset form after booking (optional, but good for UX)
-    // setAppointment({ category: 'regular', fullName: '', phoneNumber: '', date: '', time: '', paymentMethod: '', notes: '' });
   };
 
   const resetBooking = () => {
     setIsBooked(false);
+    setBookingError(null);
     setAppointment({
       category: 'regular',
       fullName: '',
@@ -80,6 +115,11 @@ export const AppointmentProvider = ({ children }) => {
         isBooked,
         lastBooking,
         resetBooking,
+        slotsLoading,
+        slotsError,
+        apiMinTime,
+        bookingLoading,
+        bookingError,
       }}
     >
       {children}
