@@ -1,35 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, User, Phone, Clipboard, Stethoscope, Sun, Sunset, Check } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Clock, User, Phone, Clipboard, Stethoscope, Sun, Sunset, Check, AlertCircle } from 'lucide-react';
 import { useAppointment } from '../context/AppointmentContext';
 import { PAYMENT_METHODS } from '../utils/helpers';
 import GlassCard from './GlassCard';
 import SectionTitle from './SectionTitle';
 import InputField from './InputField';
+import Loader from './Loader';
 
 const FormCard = () => {
-  const { appointment, updateAppointment, bookAppointment } = useAppointment();
+  const {
+    appointment,
+    updateAppointment,
+    bookAppointment,
+    slotsLoading,
+    slotsError,
+    apiMinTime,
+    bookingLoading,
+    bookingError,
+  } = useAppointment();
 
-  const [apiMinTime, setApiMinTime] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const [activePeriod, setActivePeriod] = useState('morning');
 
-  useEffect(() => {
-    const fetchLatestAppointmentTime = async () => {
-      try {
-        setIsLoading(true);
-        let nextAvailableTime = "11:30";
-        setApiMinTime(nextAvailableTime);
-      } catch (error) {
-        console.error("Failed to fetch minimum dynamic time from API", error);
-        setApiMinTime("08:00");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchLatestAppointmentTime();
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (appointment.fullName === "" || appointment.phoneNumber === "" || appointment.date === "" || appointment.time === "" || appointment.paymentMethod === "") {
@@ -42,7 +34,7 @@ const FormCard = () => {
       return;
     }
     
-    bookAppointment();
+    await bookAppointment();
   };
 
   const handleMinDate = () => {
@@ -119,10 +111,10 @@ const FormCard = () => {
 
   const currentAvailableSlots = getAvailableSlotsForPeriod(activePeriod);
 
-  if (isLoading) {
+  if (slotsLoading || bookingLoading) {
     return (
       <GlassCard className="h-full flex items-center justify-center p-8">
-        <p className="text-gray-500 font-medium animate-pulse">Syncing structural booking layouts...</p>
+        <Loader />
       </GlassCard>
     );
   }
@@ -130,6 +122,21 @@ const FormCard = () => {
   return (
     <GlassCard className="h-full border border-white/40 shadow-2xl">
       <SectionTitle>Schedule an Appointment</SectionTitle>
+
+      {slotsError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+          <AlertCircle size={18} className="text-red-500 shrink-0" />
+          <p className="text-red-600 text-sm">{slotsError}</p>
+        </div>
+      )}
+
+      {bookingError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+          <AlertCircle size={18} className="text-red-500 shrink-0" />
+          <p className="text-red-600 text-sm">{bookingError}</p>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
 
         {/* Category Selection */}
