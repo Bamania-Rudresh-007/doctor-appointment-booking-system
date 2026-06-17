@@ -13,6 +13,7 @@ const userService = {
   registerAppointment: (appointmentData) => axiosClient.post('/appointments/register', appointmentData),
   updateAppointment: (appointmentData) => axiosClient.put('/appointments/update', appointmentData),
   getAllAppointments: () => axiosClient.get('/appointments/all'),
+  getLatestAppointmentTime: () => axiosClient.get('/appointments/latest'),
 
 };
 
