@@ -1,10 +1,14 @@
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL , 'http://localhost:5173'
+  process.env.FRONTEND_URL ,'https://doctor-appointment-booking-system-puce-omega.vercel.app', 'http://localhost:5173'
 ].filter(Boolean);
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // Debug helper: Check Render's live application logs
+    console.log("Incoming request origin:", origin);
+    console.log("Allowed backend origins list:", allowedOrigins);
+
     // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
     if (!origin) return callback(null, true);
     
