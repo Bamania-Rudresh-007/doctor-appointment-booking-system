@@ -3,7 +3,7 @@ import { getAccessToken, clearAccessToken } from '../doctor-dashboard/utils/loca
 
 // 1. Create custom instance with environment variables
 const axiosClient = axios.create({
-  baseURL: import.meta.env.BACKEND_API_URL || "http://localhost:7300/api",
+  baseURL: "https://doctor-appointment-booking-system-la37.onrender.com/api" || "http://localhost:7300/api",
   timeout: 10000, // 10 seconds timeout window
   headers: {
     'Content-Type': 'application/json',
