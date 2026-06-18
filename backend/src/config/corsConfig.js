@@ -1,6 +1,7 @@
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL ,'https://doctor-appointment-booking-system-puce-omega.vercel.app', 'http://localhost:5173'
+  process.env.FRONTEND_URL,
+  'http://localhost:5173'
 ].filter(Boolean);
 
 const corsOptions = {
