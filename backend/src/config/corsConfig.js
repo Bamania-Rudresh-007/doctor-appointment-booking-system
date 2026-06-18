@@ -1,7 +1,6 @@
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  'https://staging-frontend.com'
+  process.env.FRONTEND_URL || 'http://localhost:5173',
 ];
 
 const corsOptions = {
