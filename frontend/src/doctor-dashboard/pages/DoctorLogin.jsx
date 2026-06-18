@@ -98,18 +98,6 @@ const DoctorLogin = () => {
                         </div>
                     )}
 
-                    <div className="mb-6 p-4 bg-blue-600/20 border border-blue-500/30 rounded-lg">
-                        <p className="text-xs text-gray-400 mb-2 font-semibold">
-                            Demo Credentials:
-                        </p>
-                        <p className="text-xs text-blue-400 font-mono break-all mb-1">
-                            Email: {DOCTOR_DUMMY_LOGIN.email}
-                        </p>
-                        <p className="text-xs text-blue-400 font-mono break-all">
-                            Password: {DOCTOR_DUMMY_LOGIN.password}
-                        </p>
-                    </div>
-
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
                             <label className="block text-sm font-semibold text-gray-300 mb-2">
