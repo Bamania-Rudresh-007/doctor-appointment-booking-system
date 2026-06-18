@@ -1,17 +1,19 @@
 import axios from 'axios';
 import { getAccessToken, clearAccessToken } from '../doctor-dashboard/utils/localStorage';
 
-// 1. Create custom instance with environment variables
+const isDevelopment = import.meta.env.DEV;
+
 const axiosClient = axios.create({
-  baseURL: "https://doctor-appointment-booking-system-la37.onrender.com/api" || "http://localhost:7300/api",
-  timeout: 10000, // 10 seconds timeout window
+  baseURL: isDevelopment 
+    ? "http://localhost:7300/api" 
+    : "https://doctor-appointment-booking-system-la37.onrender.com/api",
+  timeout: 10000, 
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
 });
 
-// 2. Request Interceptor: Inject Auth Tokens automatically
 axiosClient.interceptors.request.use(
   (config) => {
     config.withCredentials = true;
@@ -26,7 +28,6 @@ axiosClient.interceptors.request.use(
   }
 );
 
-// 3. Response Interceptor: Standardised returns & Global Error handling
 axiosClient.interceptors.response.use(
   (response) => {
     // Return only data payload to components for cleaner code
