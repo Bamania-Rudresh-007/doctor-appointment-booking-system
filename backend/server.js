@@ -16,9 +16,6 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/appointments", appointmentRouter);
-app.get("/", (req, res) => {
-    res.end("Hey welcome to the carefirst clinic backend api's !!!...");
-});
 
 connectDB();
 
