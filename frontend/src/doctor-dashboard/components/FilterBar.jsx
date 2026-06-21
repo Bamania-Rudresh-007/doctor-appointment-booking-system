@@ -100,7 +100,7 @@ const FilterBar = ({ onFilterChange, onSearch }) => {
             {(searchTerm || selectedStatus || selectedCategory) && (
                 <button
                     onClick={clearFilters}
-                    className="flex items-center justify-center gap-2 px-4 py-2 w-full md:w-auto bg-slate-700/50 border border-slate-600 rounded-lg text-gray-300 hover:bg-slate-700 hover:text-white transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-2 w-full md:w-auto bg-slate-700/50 border border-slate-600 rounded-lg text-gray-300 hover:bg-slate-700 hover:text-white transition-colors cursor-pointer"
                 >
                     <X size={18} />
                     <span className="text-sm">Clear Filters</span>
